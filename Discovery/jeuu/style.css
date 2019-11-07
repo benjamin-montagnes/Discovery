@@ -1,0 +1,77 @@
+@font-face {
+  font-family: "Ma Super Fonte";
+  src: url('STJEDISE.TTF');
+}
+
+body {
+  background:black;
+  padding:0;
+  margin:0;
+  overflow:hidden;
+  font-family: "Ma Super Fonte", Helvetica, Arial, sans-serif;}
+}
+
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  color: #ffffff;
+  padding: 5px;
+  font-family:Monospace;
+  font-size:13px;
+  text-align:center;
+}
+
+a {
+  color: #ffffff;
+}
+
+#boite{
+  position: absolute;
+   color:white;
+   top:12%;
+   left:35%;
+   font-size:30px;
+ }
+
+.carre {
+  position:absolute;
+  top:35%;
+  left:85%;
+  border-top: 40px solid transparent;
+  border-left: 50px solid darkturquoise;
+  border-bottom: 40px solid transparent;
+}
+
+.carregauche {
+  position:absolute;
+  top:35%;
+  left:15%;
+  border-top: 40px solid transparent;
+  border-right: 50px solid darkturquoise;
+  border-bottom: 40px solid transparent;
+}
+
+#play{
+  position: absolute;
+  color:white;
+  top:80%;
+  left:46%;
+  background-color: white;
+  color:black;
+  display:block;
+  padding:10px;
+  border-radius:10px;
+}
+
+#play:hover{
+  background-color: red;
+}
+
+.carregauche:hover{
+  border-right: 50px solid red;
+}
+
+.carre:hover{
+  border-left: 50px solid red;
+}

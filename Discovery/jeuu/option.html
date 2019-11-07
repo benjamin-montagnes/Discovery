@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Discovery</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+  <style>
+    #day , #night{
+      position:absolute;
+      border: 2px solid white;
+      top:35%;
+      width:200px;
+      height:200px;
+    }
+    #day{
+      left:20%;
+      content: url('day.png')
+    }
+    #night{
+      right:20%;
+      content: url('night.png')
+    }
+    #day:hover , #night:hover{
+      border: 2px solid red;
+    }
+  </style>
+	<body>
+    <div id='boite'>Select Your Settings</div>
+    <div id='play' onclick="redirectTo('playy/play.html')">PLAY</div>
+    <div id='day' onclick='day()'></div>
+    <div id='night' onclick="night()"></div>
+    <script>
+
+
+    var daynb=0
+    var nightnb=0
+    function day(){
+      if (nightnb>=1){
+        document.getElementById('night').style.border= '2px solid white'
+        document.getElementById('day').style.border= '2px solid green'
+        nightnb=0
+        daynb+=1
+      }
+      else{
+        document.getElementById('day').style.border= '2px solid green'
+        daynb+=1
+      }
+    }
+    function night(){
+      if (daynb>=1){
+        document.getElementById('night').style.border= '2px solid green'
+        document.getElementById('day').style.border= '2px solid white'
+        daynb=0
+        nightnb+=1
+      }
+      else{
+        document.getElementById('night').style.border= '2px solid green'
+        nightnb+=1
+      }
+    }
+
+		function redirectTo(sUrl) {
+			if (daynb==1){
+				let options = localStorage.setItem('options','0');
+			}
+			else{
+				let options = localStorage.setItem('options','1');
+			}
+			window.location = sUrl;
+		}
+    </script>
+	</body>
+</html>

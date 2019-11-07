@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Discovery</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+			}
+			body {
+				background-color: #ffffff;
+				margin: 0;
+				overflow: hidden;
+				font-family: arial;
+			}
+			#info {
+				text-align: center;
+				padding: 5px;
+				position: absolute;
+				width: 100%;
+				color: white;
+			}
+			#pause,#menu{
+				position: absolute;
+				width:50px;
+				top:3%;
+				opacity: 0.5;
+			}
+			#menu{
+				right:3%;
+			}
+			#pause{
+				left:3%;
+			}
+			#pause:hover,#menu:hover{
+				opacity: 1;
+			}
+			#menuBox {
+				background-color: rgba(0, 0, 0, 0.1);
+			}
+
+			.menuOption {
+				text-align: center;
+				font-weight: 500;
+				font-size: 17px;
+				padding: 10px 50px 10px 45px;
+				cursor: pointer;
+			}
+
+			#menuBox, .menuOption, .slider, .menuOption:hover, #pause, #menu{
+				filter: brightness(0) invert(1);
+			}
+
+			a {
+				text-decoration: none;
+				color: black;
+			}
+
+			.sliderBox {
+				width: 100%;
+				z-index: 10;
+			}
+
+			.slider {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 100%;
+				height: 5px;
+				border-radius: 50%;
+				outline: none;
+				opacity: 0.7;
+			}
+
+			.menuOption:hover {
+				background: rgba(0, 0, 0, 0.2);
+			}
+		</style>
+	</head>
+	<body>
+		<audio id='music' src="interstellar.mp3" autoplay></audio>
+		<img id='pause' src='pause.png' onClick='pause()';>
+		<img id='menu' src='menu.png' onClick='menu()';>
+		<script src="three.js"></script>
+		<script src="TypedArrayUtils.js"></script>
+		<script src="FirstPersonControls.js"></script>
+		<div id="menuBox" style="width: 150px; display: none; position: absolute; right: 3%; top: 100px; float: right; box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);">
+			<ul id="menuList" style="list-style-type: none; overflow: hidden; padding: 0;">
+				<li class="menuOption"><a href="../../../home.html">Home</a></li>
+				<li class="menuOption"><a href="../../rules.html" target="_blank">Rules</a></li>
+				<li class="menuOption"><a href="../test1.html">Restart</a></li>
+				<li class="menuOption"><a href="../../quit.html">Quit</a></li>
+				<li class="menuOption" style="opacity:0.7"><em>Speed:<em></li>
+				<li class="menuOption">
+					<input type="range" min="100" max="2000" value="1000" class="slider" id="speedSlider">
+				</li>
+			</ul>
+		</div>
+
+		<script>
+		let ship = localStorage.getItem('shipName')
+		let setting = localStorage.getItem('options')
+
+		var ship_scale=1.5
+		if (ship == 'vector_ship.png'){
+			var ship_scale=2.2
+		}
+
+		var aud = document.getElementById("music");
+
+		document.addEventListener("keydown", event => {
+		if (event.isComposing || event.keyCode === 32) {
+			pause()
+		}
+		});
+			var k=0
+			var isPause = false;
+			function pause(){
+				if (k%2==0){
+					controls.lookSpeed=0;
+					controls.movementSpeed = 0;
+					document.getElementById('pause').src='play.png';
+					isPause = true;
+					menuSelect.style.display = "block";
+					aud.pause()
+					k+=1
+				}
+				else{
+					controls.lookSpeed=0.2;
+					controls.movementSpeed = speedSlider.value;
+					menuSelect.style.display = "none";
+					document.getElementById('pause').src='pause.png';
+					isPause = false;
+					aud.play()
+					k+=1
+				}
+			}
+				var c=0;
+				var menuSelect = document.getElementById('menuBox');
+				function menu(){
+					if (k%2==0){
+						menuSelect.style.display = "block";
+						k+=1
+					}
+					else{
+						menuSelect.style.display = "none";
+						k+=1
+					}
+				}
+
+			var speedSlider = document.getElementById('speedSlider')
+			var u=0
+			var camera, scene, renderer;
+			var controls;
+			var clock = new THREE.Clock();
+			function init() {
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 1000000 );
+				scene = new THREE.Scene();
+				controls = new THREE.FirstPersonControls( camera );
+				controls.movementSpeed = speedSlider.value;
+				controls.lookSpeed = 0.2;
+				controls.lookAt( 500, 500, 500 );
+
+				var cubeTextureLoader = new THREE.CubeTextureLoader();
+				cubeTextureLoader.setPath( '' );
+				var cubeTexture = cubeTextureLoader.load( [
+					'px'+String(setting)+'.jpg', 'nx'+String(setting)+'.jpg',
+					'py'+String(setting)+'.jpg', 'ny'+String(setting)+'.jpg',
+					'pz'+String(setting)+'.jpg', 'nz'+String(setting)+'.jpg',
+				] );
+				scene.background = cubeTexture;
+				//
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+
+				var geometry = new THREE.SphereGeometry(27.4,100, 100);
+				var texture = new THREE.TextureLoader().load('earth.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_earthh = new THREE.Mesh(geometry, material);
+				scene.add(planet_earthh);
+				planet_earthh.position.setX(322.372);
+
+				var geometry = new THREE.SphereGeometry(5, 50, 50);
+				var texture = new THREE.TextureLoader().load('lune.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var lune = new THREE.Mesh(geometry, material);
+				scene.add(lune);
+				lune.position.setX(320);
+				lune.position.setY(30);
+				lune.position.setZ(50);
+
+
+				var geometry = new THREE.SphereGeometry(3000, 200, 200);
+				var texture = new THREE.TextureLoader().load('sun.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var sun = new THREE.Mesh(geometry, material);
+				scene.add(sun);
+				sun.position.setX(-10000);
+				sun.position.setY(250);
+
+				var geometry = new THREE.SphereGeometry(26,100, 100);
+				var texture = new THREE.TextureLoader().load('venus.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_venus = new THREE.Mesh(geometry, material);
+				scene.add(planet_venus);
+				planet_venus.position.setX(133.012);
+
+				var geometry = new THREE.SphereGeometry(101.1,100, 100);
+				var texture = new THREE.TextureLoader().load('uranus.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_uranus = new THREE.Mesh(geometry, material);
+				scene.add(planet_uranus);
+				planet_uranus.position.setX(6186.435);
+
+				var geometry = new THREE.SphereGeometry(10.4,100, 100);
+				var texture = new THREE.TextureLoader().load('mercure.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_mercure = new THREE.Mesh(geometry, material);
+				scene.add(planet_mercure);
+				planet_mercure.position.setX(24.901);
+
+				var geometry = new THREE.SphereGeometry(97.9,100, 100);
+				var texture = new THREE.TextureLoader().load('neptune.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_neptune = new THREE.Mesh(geometry, material);
+				scene.add(planet_neptune);
+				planet_neptune.position.setX(9698.757);
+
+				var geometry = new THREE.SphereGeometry(14.5,100, 100);
+				var texture = new THREE.TextureLoader().load('mars.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_mars = new THREE.Mesh(geometry, material);
+				scene.add(planet_mars);
+				planet_mars.position.setX(491.069);
+
+				var geometry = new THREE.SphereGeometry(308.1,100, 100);
+				var texture = new THREE.TextureLoader().load('jupiter.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_jupiter = new THREE.Mesh(geometry, material);
+				scene.add(planet_jupiter);
+				planet_jupiter.position.setX(1677.146);
+
+				var geometry = new THREE.SphereGeometry(250.9,100, 100);
+				var texture = new THREE.TextureLoader().load('saturn.jpg');
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				var planet_saturne = new THREE.Mesh(geometry, material);
+				scene.add(planet_saturne);
+				planet_saturne.position.setX(3475.651);
+
+				var geometry = new THREE.RingGeometry( 330, 500, 32 );
+				var texture = new THREE.TextureLoader().load('saturn_ring.png');
+				var material = new THREE.MeshBasicMaterial( { map:texture, side: THREE.DoubleSide} );
+				var saturn_ring = new THREE.Mesh( geometry, material );
+				scene.add( saturn_ring );
+				saturn_ring.position.setX(3475.651);
+				saturn_ring.rotation.x=2;
+
+				var map = new THREE.TextureLoader().load(ship);
+				var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+				var sprite = new THREE.Sprite( material );
+				camera.add(sprite);
+				sprite.position.set(0,0,-10);
+				sprite.scale.set(2,ship_scale,1);
+				scene.add(camera)
+
+			}
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				controls.handleResize();
+			}
+			function animate() {
+				requestAnimationFrame( animate );
+				renderer.render( scene, camera );
+				controls.update( clock.getDelta() );
+
+				controls.movementSpeed = speedSlider.value;
+
+			}
+			init();
+			animate();
+		</script>
+	</body>
+</html>

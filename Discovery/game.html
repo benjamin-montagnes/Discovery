@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="project.css">
+    <script src="project.js" defer></script>
+    <title> the Game </title>
+</head>
+
+<body>
+  <ul>
+    <li><a href="../home.html">Home</a></li>
+    <li><a href="game.html">Game</a></li>
+    <li><a href="rules.html">Rules</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+
+  <div class="menu">
+    <h1> the Game. </h1>
+    <h2> Explore, uncover, discover.<em style="color:lightgrey; font-size: 20px;"> <br> <br> Press the <strong>spacebar</strong> to start the game.</em></h2>
+  </div>
+
+  <div id="circle"><img id="blackHole" src="Pictures/sky2.jpeg"></div>
+
+  <script>
+  document.addEventListener("keydown", event => {
+  if (event.isComposing || event.keyCode === 32) {
+    window.location = 'jeuu/test1.html';
+  }
+  });
+  </script>
+  </body>
+
+
+</html>
